@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine ❤️</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  height:100vh;
+  background:linear-gradient(to bottom,#b30000,#ffd6d6);
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* 🌧️ BACKGROUND HEART + KISS RAIN */
+.heart{
+  position:absolute;
+  top:-20px;
+  font-size:22px;
+  animation:fall linear infinite;
+  z-index:1;
+  pointer-events:none;
+}
+@keyframes fall{
+  to{transform:translateY(110vh);}
+}
+
+/* ✉️ ENVELOPE */
+.envelope{
+  width:260px;
+  height:180px;
+  background:#c00;
+  border-radius:8px;
+  cursor:pointer;
+  position:relative;
+  z-index:10;
+  box-shadow:0 10px 20px rgba(0,0,0,.3);
+}
+.envelope::before{
+  content:"";
+  position:absolute;
+  top:0; left:0;
+  border-left:130px solid transparent;
+  border-right:130px solid transparent;
+  border-top:90px solid #a00000;
+}
+
+/* PAGE */
+.page{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+.page.show{display:flex;}
+
+/* NOTE */
+.note{
+  background:white;
+  padding:30px;
+  width:50%;
+  max-width:500px;
+  border-radius:16px;
+  text-align:center;
+  position:relative;
+  box-shadow:0 20px 40px rgba(0,0,0,.4);
+}
+
+/* 🐼 PANDA */
+.panda{
+  font-size:70px;
+  margin-bottom:10px;
+  position:relative;
+}
+.jump{
+  animation:jump .6s infinite alternate;
+}
+@keyframes jump{
+  to{transform:translateY(-30px);}
+}
+
+/* ❤️💖 HEART BURST */
+.burst-heart{
+  position:absolute;
+  font-size:20px;
+  animation:burst 1.2s ease-out forwards;
+}
+@keyframes burst{
+  from{opacity:1; transform:translate(0,0) scale(1);}
+  to{opacity:0; transform:translate(var(--x),var(--y)) scale(1.4);}
+}
+
+/* BUTTONS */
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  margin-top:20px;
+}
+button{
+  padding:14px 30px;
+  border-radius:8px;
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+}
+#yes{background:red;color:white;}
+#no{background:black;color:white;}
+#surprise{
+  background:hotpink;
+  color:white;
+  display:none;
+  animation:pulse 1s infinite;
+}
+@keyframes pulse{
+  50%{transform:scale(1.25);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="envelope" onclick="openNote()"></div>
+
+<!-- PAGE 1 -->
+<div class="page" id="page1">
+  <div class="note">
+    <div class="panda" id="panda">🐼</div>
+    <h1 id="question">Will You Be My Valentine?</h1>
+
+    <div class="buttons">
+      <button id="yes" onclick="yesClicked()">Yes</button>
+      <button id="no">No</button>
+      <button id="surprise" onclick="openSurprise()">💝 See Your Surprise 💝</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <div class="note">
+    <div class="panda jump" id="panda2">🐼💖</div>
+    <h1>For You ❤️</h1>
+    <p style="color:#700;line-height:1.7;">
+      My love,<br><br>
+      <p>I don’t know when it happened exactly, but somewhere between our conversations, our laughs, our silences, and the little moments we share, you quietly became the most important part of my world. Loving you feels natural, like breathing — something my heart does without effort, yet with so much meaning.</p>
+      <p>You have this beautiful way of making everything brighter. Your smile has the power to calm my storms, your voice feels like home, and your presence turns even ordinary days into something special. When I think about happiness, I don’t imagine places or things — I imagine you.</p>
+      <p>I love the way you are, exactly as you are. Your kindness, your strength, your imperfections, your dreams — all of it. I love how you care, how you feel deeply, how you make me want to be better just by being yourself. You inspire me in ways I never expected, and I’m grateful for you every single day.</p>
+      <p>Thank you for being you. Thank you for loving me. And thank you for being the reason my heart smiles a little more every day.</p><br>
+      My heart chooses you — always. 💖
+    </p>
+  </div>
+</div>
+
+<script>
+/* OPEN NOTE */
+function openNote(){
+  document.querySelector(".envelope").style.display="none";
+  document.getElementById("page1").classList.add("show");
+}
+
+/* YES CLICK */
+function yesClicked(){
+  const panda=document.getElementById("panda");
+  panda.classList.add("jump");
+
+  document.getElementById("question").textContent="Yay! I'm so happy 💕";
+  document.getElementById("yes").style.display="none";
+  document.getElementById("no").style.display="none";
+  document.getElementById("surprise").style.display="inline-block";
+
+  heartBurst(panda);
+}
+
+/* ❤️ HEART BURST FUNCTION (REUSABLE) */
+function heartBurst(panda){
+  const directions=[
+    {x:-60,y:-40},{x:0,y:-70},{x:60,y:-40},
+    {x:-70,y:10},{x:70,y:10},
+    {x:-50,y:60},{x:0,y:80},{x:50,y:60}
+  ];
+
+  directions.forEach(d=>{
+    const h=document.createElement("div");
+    h.className="burst-heart";
+    h.innerHTML="❤️";
+    h.style.setProperty("--x",d.x+"px");
+    h.style.setProperty("--y",d.y+"px");
+    panda.appendChild(h);
+    setTimeout(()=>h.remove(),1200);
+  });
+}
+
+/* OPEN SURPRISE PAGE */
+function openSurprise(){
+  document.getElementById("page1").classList.remove("show");
+  document.getElementById("page2").classList.add("show");
+
+  // ❤️💖 Heart burst on surprise page panda
+  setTimeout(()=>{
+    heartBurst(document.getElementById("panda2"));
+  },300);
+}
+
+/* NO BUTTON RUN */
+const noBtn=document.getElementById("no");
+noBtn.addEventListener("mouseover",()=>{
+  noBtn.style.position="fixed";
+  noBtn.style.left=Math.random()*(window.innerWidth-150)+"px";
+  noBtn.style.top=Math.random()*(window.innerHeight-100)+"px";
+});
+
+/* 🌧️ BACKGROUND HEART + KISS RAIN */
+const rain=["❤️","🤍","💖","😘","💋"];
+function createHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML=rain[Math.floor(Math.random()*rain.length)];
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(2+Math.random()*2)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+}
+setInterval(createHeart,120);
+</script>
+
+</body>
+</html>
